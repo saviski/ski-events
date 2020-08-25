@@ -1,0 +1,8 @@
+/.vscode
+/node_modules
+/pnpm-lock.yaml
+/events.js
+/events.min.js
+/events.min.js.map
+/.types
+/js
