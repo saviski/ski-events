@@ -1,8 +1,8 @@
-import { lazyGetter } from './lazy-getter'
-import AsyncGeneratorEmitter from './async-generator-emitter'
-import '../extensions/'
-import { skidata } from '@ski/data'
-import { AsyncStream } from '@ski/streams'
+import { lazyGetter } from './lazy-getter.js'
+import AsyncGeneratorEmitter from './async-generator-emitter.js'
+import '../extensions/.js'
+import { skidata } from '@ski/data/data.js'
+import { AsyncStream } from '@ski/streams/streams.js'
 
 export interface EventGeneratorOptions {
   preventDefault?: boolean

@@ -2,15 +2,15 @@
   "name": "@ski/events",
   "version": "0.1.0",
   "description": "element.events proxy",
-  "main": "events.min.js",
+  "type": "module",
+  "main": "events.js",
   "module": "events.js",
   "types": "src/index.ts",
   "scripts": {
     "build": "run-s clean build:*",
     "watch": "run-p \"build:* -- --watch\"",
     "clean": "rimraf js .types",
-    "build:bundle": "rollup -c",
-    "build:typescript": "ttsc"
+    "build:bundle": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/saviski/ski-events#readme",
   "dependencies": {
-    "@ski/streams": "next",
-    "@ski/data": "next"
+    "@ski/data": "next",
+    "@ski/streams": "next"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^9.0.0",

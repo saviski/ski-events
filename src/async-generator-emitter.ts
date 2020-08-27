@@ -1,4 +1,4 @@
-import { AsyncStream } from '@ski/streams'
+import { AsyncStream } from '@ski/streams/streams.js'
 
 type Emit<T> = (value: T) => void
 
