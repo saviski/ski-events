@@ -1,4 +1,3 @@
-import EventGenerator from './dom-events.js'
-import AsyncGeneratorEmitter from './async-generator-emitter.js'
-
-export { EventGenerator, AsyncGeneratorEmitter }
+export * from '../../streams/src/op/dom-events.js'
+export * from './emitter.js'
+export * from './dom-events.js'

@@ -18,7 +18,8 @@
     "noImplicitReturns": true,
     "preserveSymlinks": false,
     "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*.ts"
