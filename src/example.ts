@@ -1,9 +1,4 @@
-import {
-  event,
-  matches,
-  preventDefault,
-  stopPropagation,
-} from '@ski/decorators/decorators.js'
+import { event, matches, preventDefault, stopPropagation } from '@ski/decorators/decorators.js'
 import { Emitter } from './emitter.js'
 import { onclick } from './dom-events.js'
 
@@ -28,7 +23,7 @@ class ClassName extends HTMLElement {
   @(onTest4.from(ClassName).element)
   @preventDefault
   @matches('.active > li')
-  elementClick(_event: MyEvent) {}
+  elementClick(_event: Event): any {}
 
   @onclick.at(document.body)
   @onclick.root('#element')

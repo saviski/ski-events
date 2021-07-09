@@ -53,7 +53,7 @@
     "events.min.js.map"
   ],
   "prettier": {
-    "printWidth": 90,
+    "printWidth": 100,
     "semi": false,
     "tabWidth": 2,
     "proseWrap": "never",

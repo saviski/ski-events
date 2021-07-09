@@ -1,37 +1,28 @@
 import { InlineEventListener, init, hook } from '@ski/mixins/mixins.js'
-import { spy, NestedSpy, SpyChangeSource } from '@ski/spy/spy.js'
+import { spy, SpyChangeSource } from '@ski/spy/spy.js'
 import { stream, run, domEvents } from '@ski/streams/streams.js'
-import { decorator } from '@ski/decorators/decorators.js'
-import { MethodDecorator } from '../../decorators/src/decorator'
+import { MethodDecorator } from '@ski/decorators/decorators.js'
 
 export type EventConstructor = new (type: string, ...args: any[]) => Event
 
-type TypedMethodDecorator<T, U> = (
-  target: T,
-  method: string | symbol,
-  descriptor: TypedPropertyDescriptor<(event: U) => any>
-) => void
-
-const linkEvents = decorator(
-  class extends MethodDecorator<any, any, InlineEventListener<any>> {
-    constructor(
-      private cls,
-      private type: string,
-      private changes: AsyncGenerator<SpyChangeSource<any>>
-    ) {
-      super()
-    }
-
-    decorateMethod({ constructor, descriptor } = this.params) {
-      constructor === this.cls &&
-        stream(this.changes).trigger(change =>
-          run(domEvents<Event>(change.value, this.type), event =>
-            descriptor.value!.call(change.source, event)
-          )
-        )
-    }
+class LinkEvent extends MethodDecorator<any, any, InlineEventListener<any>> {
+  constructor(
+    private cls,
+    private type: string,
+    private changes: AsyncGenerator<SpyChangeSource<any>>
+  ) {
+    super()
   }
-)
+
+  decorateMethod({ constructor, descriptor } = this.paramtypes) {
+    constructor === this.cls &&
+      stream(this.changes).trigger(change =>
+        run(domEvents<Event>(change.value, this.type), event =>
+          descriptor.value!.call(change.source, event)
+        )
+      )
+  }
+}
 
 export class Emitter<
   S extends string,
@@ -44,24 +35,9 @@ export class Emitter<
   // used only to retrieve the type
   event: InlineEventListener<E>
 
-  from<T extends object>(constructor: {
-    prototype: T
-  }): NestedSpy<T, T, TypedMethodDecorator<T, E>> {
-    return spy(
-      constructor.prototype,
-      changes => linkEvents(constructor, this.type, changes) as TypedMethodDecorator<T, E>
-      // (
-      //   proto: { constructor: Function },
-      //   _method: string | symbol,
-      //   descriptor: TypedPropertyDescriptor<(event: E) => any>
-      // ) => {
-      //   proto.constructor === constructor &&
-      //     stream(changes).trigger(change =>
-      //       run(domEvents<E>(change.value, this.type), event =>
-      //         descriptor.value!.call(change.source, event)
-      //       )
-      //     )
-      // }
+  from<T extends object>(constructor: { prototype: T }) {
+    return spy(constructor.prototype, changes =>
+      new LinkEvent(constructor, this.type, changes).typed<T, any, (event: E) => any>()
     )
   }
 
@@ -72,9 +48,7 @@ export class Emitter<
       descriptor: TypedPropertyDescriptor<(event: E) => any>
     ) => {
       init(<any>target.constructor, self =>
-        element.addEventListener(this.type, event =>
-          descriptor.value!.call(self, <E>event)
-        )
+        element.addEventListener(this.type, event => descriptor.value!.call(self, <E>event))
       )
     }
   }
@@ -102,9 +76,7 @@ export class Emitter<
     return target.dispatchEvent(this.create(...args))
   }
 
-  create(
-    ...args: C extends new (type: string, ...args: infer A) => Event ? A : never
-  ): Event {
+  create(...args: C extends new (type: string, ...args: infer A) => Event ? A : never): Event {
     return new this.eventConstructor(this.type, ...args)
   }
 }
