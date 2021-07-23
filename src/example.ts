@@ -14,7 +14,7 @@ class MyEvent extends Event {
 const onTest3 = new Emitter('test3', MyEvent)
 const onTest4 = new Emitter('test4', MyEvent)
 
-class ClassName extends HTMLElement {
+export class ClassName extends HTMLElement {
   element?: HTMLDivElement
 
   @event ontest3 = onTest3.event
@@ -28,7 +28,7 @@ class ClassName extends HTMLElement {
   @onclick.at(document.body)
   @onclick.root('#element')
   @stopPropagation
-  bodyClick(event: MouseEvent) {}
+  bodyClick(_event: MouseEvent) {}
 
   abc() {
     onTest3.emit(this, { value: 50 }, 'string')

@@ -11,7 +11,7 @@ export default [
       typescript()
     ],
     external: Object.keys(pkg.dependencies)
-      .filter(dependency => dependency.startsWith(/@ski/))
+      .filter(dependency => dependency.startsWith('@ski'))
       .map(dependency => dependency.replace(/@ski\/(\w+)/, '@ski/$1/$1.js'))
   }
 ]

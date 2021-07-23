@@ -1,6 +1,6 @@
 import { InlineEventListener, init, hook } from '@ski/mixins/mixins.js'
 import { spy, SpyChangeSource } from '@ski/spy/spy.js'
-import { stream, run, domEvents } from '@ski/streams/streams.js'
+import { stream, domEvent } from '@ski/streams/streams.js'
 import { MethodDecorator } from '@ski/decorators/decorators.js'
 
 export type EventConstructor = new (type: string, ...args: any[]) => Event
@@ -9,15 +9,15 @@ class LinkEvent extends MethodDecorator<any, any, InlineEventListener<any>> {
   constructor(
     private cls,
     private type: string,
-    private changes: AsyncGenerator<SpyChangeSource<any>>
+    private changes: AsyncIterable<SpyChangeSource<any>>
   ) {
     super()
   }
 
-  decorateMethod({ constructor, descriptor } = this.paramtypes) {
-    constructor === this.cls &&
+  decorateMethod({ constructor, descriptor } = this.params) {
+    if (constructor === this.cls)
       stream(this.changes).trigger(change =>
-        run(domEvents<Event>(change.value, this.type), event =>
+        stream(domEvent<Event>(change.value, this.type)).listen(event =>
           descriptor.value!.call(change.source, event)
         )
       )
