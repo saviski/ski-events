@@ -1,5 +1,5 @@
 import { InlineEventListener, init, hook } from '@ski/mixins/mixins.js'
-import { spy, SpyChangeSource } from '@ski/spy/spy.js'
+import { NestedSpy, spy, SpyChangeSource } from '@ski/spy/spy.js'
 import { stream, domEvent } from '@ski/streams/streams.js'
 import { MethodDecorator } from '@ski/decorators/decorators.js'
 
@@ -16,13 +16,21 @@ class LinkEvent extends MethodDecorator<any, any, InlineEventListener<any>> {
 
   decorateMethod({ constructor, descriptor } = this.params) {
     if (constructor === this.cls)
-      stream(this.changes).trigger(change =>
-        stream(domEvent<Event>(change.value, this.type)).listen(event =>
-          descriptor.value!.call(change.source, event)
+      stream(this.changes)
+        .trigger(({ source, value: element }) =>
+          stream(domEvent(element, this.type)).map(event => ({ source, event }))
         )
-      )
+        .listen(({ source, event }) => {
+          descriptor.value!.call(source, event)
+        })
   }
 }
+
+type ListenerDecorator<T, E> = (
+  prototype: T,
+  property: any,
+  descriptor: TypedPropertyDescriptor<(event: E) => any>
+) => void
 
 export class Emitter<
   S extends string,
@@ -35,9 +43,11 @@ export class Emitter<
   // used only to retrieve the type
   event: InlineEventListener<E>
 
-  from<T extends object>(constructor: { prototype: T }) {
-    return spy(constructor.prototype, changes =>
-      new LinkEvent(constructor, this.type, changes).typed<T, any, (event: E) => any>()
+  from<T extends object>(constructor: { prototype: T }): NestedSpy<T, T, ListenerDecorator<T, E>> {
+    return spy(
+      constructor.prototype,
+      (changes, prototype: T, property: any, descriptor: PropertyDescriptor) =>
+        new LinkEvent(constructor, this.type, changes).decorator(prototype, property, descriptor)
     )
   }
 
