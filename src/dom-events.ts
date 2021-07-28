@@ -83,10 +83,10 @@ export const onsubmit = new Emitter('submit', Event)
 export const onsuspend = new Emitter('suspend', Event)
 export const ontimeupdate = new Emitter('timeupdate', Event)
 export const ontoggle = new Emitter('toggle', Event)
-export const ontouchcancel = new Emitter('touchcancel', TouchEvent)
-export const ontouchend = new Emitter('touchend', TouchEvent)
-export const ontouchmove = new Emitter('touchmove', TouchEvent)
-export const ontouchstart = new Emitter('touchstart', TouchEvent)
+export const ontouchcancel = new Emitter('touchcancel', window.TouchEvent)
+export const ontouchend = new Emitter('touchend', window.TouchEvent)
+export const ontouchmove = new Emitter('touchmove', window.TouchEvent)
+export const ontouchstart = new Emitter('touchstart', window.TouchEvent)
 export const ontransitioncancel = new Emitter('transitioncancel', TransitionEvent)
 export const ontransitionend = new Emitter('transitionend', TransitionEvent)
 export const ontransitionrun = new Emitter('transitionrun', TransitionEvent)
@@ -100,10 +100,7 @@ export const onbeforeprint = new Emitter('beforeprint', Event)
 export const onbeforeunload = new Emitter('beforeunload', BeforeUnloadEvent)
 export const oncompassneedscalibration = new Emitter('compassneedscalibration', Event)
 export const ondevicemotion = new Emitter('devicemotion', DeviceMotionEvent)
-export const ondeviceorientation = new Emitter(
-  'deviceorientation',
-  DeviceOrientationEvent
-)
+export const ondeviceorientation = new Emitter('deviceorientation', DeviceOrientationEvent)
 export const ondeviceorientationabsolute = new Emitter(
   'deviceorientationabsolute',
   DeviceOrientationEvent
