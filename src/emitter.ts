@@ -1,5 +1,5 @@
 import { InlineEventListener, init, hook } from '@ski/mixins/mixins.js'
-import { NestedSpy, spy, SpyChangeSource } from '@ski/spy/spy.js'
+import { NestedSpy, spy, SpyChange } from '@ski/spy/spy.js'
 import { stream, domEvent } from '@ski/streams/streams.js'
 import { MethodDecorator } from '@ski/decorators/decorators.js'
 
@@ -9,7 +9,7 @@ class LinkEvent extends MethodDecorator<any, any, InlineEventListener<any>> {
   constructor(
     private cls,
     private type: string,
-    private changes: AsyncIterable<SpyChangeSource<any>>
+    private changes: AsyncIterable<SpyChange<any, any, any>>
   ) {
     super()
   }
