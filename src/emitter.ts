@@ -17,11 +17,11 @@ class LinkEvent extends MethodDecorator<any, any, InlineEventListener<any>> {
   decorateMethod({ constructor, descriptor } = this.params) {
     if (constructor === this.cls)
       stream(this.changes)
-        .trigger(({ source, value: element }) =>
-          stream(domEvent(element, this.type)).map(event => ({ source, event }))
+        .trigger(({ root, value: element }) =>
+          stream(domEvent(element, this.type)).map(event => ({ root, event }))
         )
-        .listen(({ source, event }) => {
-          descriptor.value!.call(source, event)
+        .listen(({ root, event }) => {
+          descriptor.value!.call(root, event)
         })
   }
 }
